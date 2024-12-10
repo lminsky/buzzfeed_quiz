@@ -1,0 +1,213 @@
+<html>
+  <head>
+    <title>Buzzfeed Quiz</title>
+  </head>
+  
+  <style>
+    .container {
+      width: 600px;
+    }
+    img {
+      width: 200px;
+    }
+    .img {
+      text-align:center;
+    }
+    .question_text {
+      text-align: center;
+      padding: 20px;
+    }
+    .answer {
+      text-align: left;
+      border: 1px solid #000000;
+      border-radius: 5px;
+      margin: 10px 20px;
+      padding: 10px
+    }
+    .result_title {
+      text-align: center;
+      padding: 20px;
+      font-weight: 600;
+      font-size: 16pt;
+    }
+    .result_description {
+      text-align: center;
+      padding: 20px;
+    }
+  </style>
+  
+  <body>
+    <div class="container">
+    </div>
+  </body>
+  
+  <script>
+    
+    let data = {
+      current: 0,
+      results: [
+        {
+          title: "Bagel A",
+          description: "Bagel A details",
+          score: 0,
+          image_url: "https://bakingamoment.com/wp-content/uploads/2020/06/IMG_8813-bagel-recipe.jpg"
+        },
+        {
+          title: "Bagel B",
+          description: "Bagel B details",
+          score: 0,
+          image_url: "https://bakingamoment.com/wp-content/uploads/2020/06/IMG_8813-bagel-recipe.jpg"
+        },
+        {
+          title: "Bagel C",
+          description: "Bagel C details",
+          score: 0,
+          image_url: "https://bakingamoment.com/wp-content/uploads/2020/06/IMG_8813-bagel-recipe.jpg"
+        },
+        {
+          title: "Bagel D",
+          description: "Bagel D details",
+          score: 0,
+          image_url: "https://bakingamoment.com/wp-content/uploads/2020/06/IMG_8813-bagel-recipe.jpg"
+        },
+      ],
+      questions: [
+        {
+          text: "Question 1",
+          image_url: "https://bakingamoment.com/wp-content/uploads/2020/06/IMG_8813-bagel-recipe.jpg",
+          answers: [
+            "Option 1 A",
+            "Option 1 B",
+            "Option 1 C",
+            "Option 1 D",
+          ]
+        },
+        {
+          text: "Question 2",
+          image_url: "",
+          answers: [
+            "Option 2 A",
+            "Option 2 B",
+            "Option 2 C",
+            "Option 2 D",
+          ]
+        },
+        {
+          text: "Question 3",
+          image_url: "https://bakingamoment.com/wp-content/uploads/2020/06/IMG_8813-bagel-recipe.jpg",
+          answers: [
+            "Option 3 A",
+            "Option 3 B",
+            "Option 3 C",
+            "Option 3 D",
+          ]
+        },
+        {
+          text: "Question 4",
+          image_url: "https://bakingamoment.com/wp-content/uploads/2020/06/IMG_8813-bagel-recipe.jpg",
+          answers: [
+            "Option 4 A",
+            "Option 4 B",
+            "Option 4 C",
+            "Option 4 D",
+          ]
+        },
+        {
+          text: "Question 5",
+          image_url: "https://bakingamoment.com/wp-content/uploads/2020/06/IMG_8813-bagel-recipe.jpg",
+          answers: [
+            "Option 5 A",
+            "Option 5 B",
+            "Option 5 C",
+            "Option 5 D",
+          ]
+        },
+      ]
+    }
+    
+    generate();
+    
+    function submit(num) {
+      data.results[num].score++;
+      data.current++;
+      if(data.current >= data.questions.length) {
+        get_results()
+      } else {
+        generate();
+      }
+    }
+    
+    function get_results() {
+      data.results = data.results.sort((a, b) => {
+        return b.score - a.score;
+      })
+      let options = []
+      for(let result of data.results) {
+        if(result.score == data.results[0].score) {
+          options.push(result)
+        }
+      }
+      let winner = Math.floor(Math.random() * options.length)
+      winner = options[winner]
+      
+      let results = document.getElementsByClassName("container")[0];
+      results.innerHTML = "";
+      
+      let img_div = document.createElement("div");
+      img_div.className = "img";
+      let img = document.createElement("img");
+      img.setAttribute("src", winner.image_url);
+      img_div.append(img);
+      if(winner.image_url != "" && winner.image_url != null) {
+        results.append(img_div);
+      }
+      
+      let result_title = document.createElement("div");
+      result_title.className = "result_title";
+      result_title.innerText = winner.title;
+      results.append(result_title);
+      
+      let result_description = document.createElement("div");
+      result_description.className = "result_description";
+      result_description.innerText = winner.description;
+      results.append(result_description);
+    }
+    
+    function generate() {
+      let num = data.current;
+      let questions = document.getElementsByClassName("container")[0];
+      questions.innerHTML = "";
+      
+      let img_div = document.createElement("div");
+      img_div.className = "img";
+      let img = document.createElement("img");
+      img.setAttribute("src", data.questions[num].image_url);
+      img_div.append(img);
+      if(data.questions[num].image_url != "" && data.questions[num].image_url != null) {
+        questions.append(img_div);
+      }
+      
+      let text_div = document.createElement("div");
+      text_div.className = "question_text";
+      text_div.innerText = data.questions[num].text;
+      questions.append(text_div);
+      
+      let answers_div = document.createElement("div");
+      answers_div.className = "answers";
+      for(let i in data.questions[num].answers) {
+        let answer_div = document.createElement("div");
+        answer_div.className = "answer";
+        answer_div.innerText = data.questions[num].answers[i]
+        answer_div.setAttribute("onclick", "submit(" + i + ")")
+        answers_div.append(answer_div);
+      }
+      questions.append(answers_div);
+      for (let i = answers_div.children.length; i >= 0; i--) {
+          answers_div.appendChild(answers_div.children[Math.random() * i | 0]);
+      }
+      
+      
+    }
+    
+  </script>
+</html>
